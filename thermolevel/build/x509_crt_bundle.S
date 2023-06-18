@@ -1,4 +1,4 @@
-/* * Data converted from /home/igara/Documents/SE/thermolevel/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/Users/igara/Documents/SE/Projeto/thermolevel/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

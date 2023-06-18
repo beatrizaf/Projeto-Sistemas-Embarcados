@@ -1,30 +1,28 @@
 {
     "C_Cpp.intelliSenseEngine": "Tag Parser",
     "idf.adapterTargetName": "esp32c3",
-    "idf.customExtraPaths": "/home/igara/.espressif/tools/xtensa-esp-elf-gdb/11.2_20220823/xtensa-esp-elf-gdb/bin:/home/igara/.espressif/tools/riscv32-esp-elf-gdb/11.2_20220823/riscv32-esp-elf-gdb/bin:/home/igara/.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch5-8.4.0/xtensa-esp32-elf/bin:/home/igara/.espressif/tools/xtensa-esp32s2-elf/esp-2021r2-patch5-8.4.0/xtensa-esp32s2-elf/bin:/home/igara/.espressif/tools/xtensa-esp32s3-elf/esp-2021r2-patch5-8.4.0/xtensa-esp32s3-elf/bin:/home/igara/.espressif/tools/riscv32-esp-elf/esp-2021r2-patch5-8.4.0/riscv32-esp-elf/bin:/home/igara/.espressif/tools/esp32ulp-elf/2.35_20220830/esp32ulp-elf/bin:/home/igara/.espressif/tools/cmake/3.23.1/bin:/home/igara/.espressif/tools/openocd-esp32/v0.11.0-esp32-20221026/openocd-esp32/bin:/home/igara/.espressif/tools/ninja/1.10.2",
+    "idf.customExtraPaths": "C:\\Users\\igara\\.espressif\\tools\\xtensa-esp-elf-gdb\\11.2_20220823\\xtensa-esp-elf-gdb\\bin;C:\\Users\\igara\\.espressif\\tools\\riscv32-esp-elf-gdb\\11.2_20220823\\riscv32-esp-elf-gdb\\bin;C:\\Users\\igara\\.espressif\\tools\\xtensa-esp32-elf\\esp-2021r2-patch5-8.4.0\\xtensa-esp32-elf\\bin;C:\\Users\\igara\\.espressif\\tools\\xtensa-esp32s2-elf\\esp-2021r2-patch5-8.4.0\\xtensa-esp32s2-elf\\bin;C:\\Users\\igara\\.espressif\\tools\\xtensa-esp32s3-elf\\esp-2021r2-patch5-8.4.0\\xtensa-esp32s3-elf\\bin;C:\\Users\\igara\\.espressif\\tools\\riscv32-esp-elf\\esp-2021r2-patch5-8.4.0\\riscv32-esp-elf\\bin;C:\\Users\\igara\\.espressif\\tools\\esp32ulp-elf\\2.35_20220830\\esp32ulp-elf\\bin;C:\\Users\\igara\\.espressif\\tools\\cmake\\3.23.1\\bin;C:\\Users\\igara\\.espressif\\tools\\openocd-esp32\\v0.11.0-esp32-20221026\\openocd-esp32\\bin;C:\\Users\\igara\\.espressif\\tools\\ninja\\1.10.2;C:\\Users\\igara\\.espressif\\tools\\idf-exe\\1.0.3;C:\\Users\\igara\\.espressif\\tools\\ccache\\4.3\\ccache-4.3-windows-64;C:\\Users\\igara\\.espressif\\tools\\dfu-util\\0.9\\dfu-util-0.9-win64",
     "idf.customExtraVars": {
-        "OPENOCD_SCRIPTS": "/home/igara/.espressif/tools/openocd-esp32/v0.11.0-esp32-20221026/openocd-esp32/share/openocd/scripts"
+        "OPENOCD_SCRIPTS": "C:\\Users\\igara\\.espressif\\tools\\openocd-esp32\\v0.11.0-esp32-20221026/openocd-esp32/share/openocd/scripts",
+        "IDF_CCACHE_ENABLE": "1"
     },
-    "idf.espIdfPath": "/home/igara/esp/esp-idf",
+    "idf.espIdfPathWin": "C:\\Users\\igara\\esp\\esp-idf",
     "idf.openOcdConfigs": [
         "board/esp32c3-bridge.cfg"
     ],
-    "idf.port": "/dev/ttyACM0",
-    "idf.pythonBinPath": "/home/igara/.espressif/python_env/idf4.4_py3.8_env/bin/python",
-    "idf.toolsPath": "/home/igara/.espressif",
+    "idf.portWin": "COM7",
+    "idf.pythonBinPathWin": "C:\\Users\\igara\\.espressif\\python_env\\idf4.4_py3.8_env\\Scripts\\python.exe",
+    "idf.toolsPathWin": "C:\\Users\\igara\\.espressif",
     "idf.flashType": "UART",
     "files.associations": {
-        "*.tcc": "c",
-        "deque": "c",
-        "list": "c",
-        "string": "c",
-        "vector": "c",
-        "system_error": "c",
         "array": "c",
-        "regex": "c",
-        "*.ipp": "c",
-        "ds18b20.h": "c",
-        "gpio.h": "c",
-        "event_groups.h": "c"
+        "chrono": "c",
+        "functional": "c",
+        "istream": "c",
+        "ostream": "c",
+        "ratio": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c"
     }
 }

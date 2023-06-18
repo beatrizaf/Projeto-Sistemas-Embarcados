@@ -1,8 +1,8 @@
-# Install script for directory: /home/igara/esp/esp-idf
+# Install script for directory: C:/Users/igara/esp/esp-idf
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr/local")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/bootloader")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -32,27 +32,32 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "TRUE")
 endif()
 
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "C:/Users/igara/.espressif/tools/riscv32-esp-elf/esp-2021r2-patch5-8.4.0/riscv32-esp-elf/bin/riscv32-esp-elf-objdump.exe")
+endif()
+
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/newlib/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/hal/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/soc/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/micro-ecc/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/spi_flash/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/bootloader_support/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/efuse/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/esp_system/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/esp_hw_support/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/riscv/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/esp32c3/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/esp_common/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/esp_rom/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/log/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/esptool_py/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/partition_table/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/bootloader/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/freertos/cmake_install.cmake")
-  include("/home/igara/Documents/SE/thermolevel/build/bootloader/esp-idf/main/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/newlib/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/hal/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/soc/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/micro-ecc/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/spi_flash/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/bootloader_support/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/efuse/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/esp_system/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/esp_hw_support/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/riscv/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/esp32c3/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/esp_common/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/esp_rom/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/log/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/esptool_py/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/partition_table/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/bootloader/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/freertos/cmake_install.cmake")
+  include("C:/Users/igara/Documents/SE/Projeto/thermolevel/build/bootloader/esp-idf/main/cmake_install.cmake")
 
 endif()
 

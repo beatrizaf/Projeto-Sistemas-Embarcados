@@ -736,7 +736,17 @@
             },
             {
                 "children": [],
-                "depends_on": "ESP32_REV_MIN_3 || IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32S3",
+                "depends_on": "IDF_TARGET_ESP32",
+                "help": null,
+                "id": "SECURE_ESP32_SUPPORTS_RSA",
+                "name": "SECURE_ESP32_SUPPORTS_RSA",
+                "range": null,
+                "title": null,
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": "SECURE_ESP32_SUPPORTS_RSA || IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32S3",
                 "help": null,
                 "id": "SECURE_BOOT_SUPPORTS_RSA",
                 "name": "SECURE_BOOT_SUPPORTS_RSA",
@@ -847,7 +857,7 @@
                         "type": "choice"
                     }
                 ],
-                "depends_on": "IDF_TARGET_ESP32 || IDF_TARGET_ESP32S2 || ESP32C3_REV_MIN >= 3 || IDF_TARGET_ESP32S3",
+                "depends_on": "IDF_TARGET_ESP32 || IDF_TARGET_ESP32S2 || (IDF_TARGET_ESP32C3 && ESP32C3_REV_MIN_FULL >= 3) || IDF_TARGET_ESP32S3",
                 "help": "Build a bootloader which enables Secure Boot on first boot.\n\nOnce enabled, Secure Boot will not boot a modified bootloader. The bootloader will only load a partition\ntable or boot an app if the data has a verified digital signature. There are implications for reflashing\nupdated apps once secure boot is enabled.\n\nWhen enabling secure boot, JTAG and ROM BASIC Interpreter are permanently disabled by default.",
                 "id": "SECURE_BOOT",
                 "name": "SECURE_BOOT",
@@ -1178,7 +1188,7 @@
                         "type": "bool"
                     }
                 ],
-                "depends_on": "(SECURE_BOOT_V2_ENABLED || SECURE_FLASH_ENC_ENABLED) && (!IDF_TARGET_ESP32 || ESP32_REV_MIN_3)",
+                "depends_on": "(SECURE_BOOT_V2_ENABLED || SECURE_FLASH_ENC_ENABLED) && !(IDF_TARGET_ESP32 && ESP32_REV_MIN_FULL < 300)",
                 "help": null,
                 "id": "security-features-uart-rom-download-mode",
                 "name": "SECURE_UART_ROM_DL_MODE",
@@ -2399,7 +2409,7 @@
                                 "id": "ESP32C3_REV_MIN_0",
                                 "name": "ESP32C3_REV_MIN_0",
                                 "range": null,
-                                "title": "Rev 0",
+                                "title": "Rev v0.0 (ECO0)",
                                 "type": "bool"
                             },
                             {
@@ -2409,7 +2419,7 @@
                                 "id": "ESP32C3_REV_MIN_1",
                                 "name": "ESP32C3_REV_MIN_1",
                                 "range": null,
-                                "title": "Rev 1",
+                                "title": "Rev v0.1 (ECO1)",
                                 "type": "bool"
                             },
                             {
@@ -2419,7 +2429,7 @@
                                 "id": "ESP32C3_REV_MIN_2",
                                 "name": "ESP32C3_REV_MIN_2",
                                 "range": null,
-                                "title": "Rev 2",
+                                "title": "Rev v0.2 (ECO2)",
                                 "type": "bool"
                             },
                             {
@@ -2429,7 +2439,7 @@
                                 "id": "ESP32C3_REV_MIN_3",
                                 "name": "ESP32C3_REV_MIN_3",
                                 "range": null,
-                                "title": "Rev 3",
+                                "title": "Rev v0.3 (ECO3)",
                                 "type": "bool"
                             },
                             {
@@ -2439,12 +2449,12 @@
                                 "id": "ESP32C3_REV_MIN_4",
                                 "name": "ESP32C3_REV_MIN_4",
                                 "range": null,
-                                "title": "Rev 4",
+                                "title": "Rev v0.4 (ECO4)",
                                 "type": "bool"
                             }
                         ],
                         "depends_on": null,
-                        "help": "Minimum revision that ESP-IDF would support.\n\nOnly supporting higher chip revisions can reduce binary size.",
+                        "help": "Required minimum chip revision. ESP-IDF will check for it and\nreject to boot if the chip revision fails the check.\nThis ensures the chip used will have some modifications (features, or bugfixes).\n\nThe complied binary will only support chips above this revision,\nthis will also help to reduce binary size.",
                         "id": "component-config-esp32c3-specific-minimum-supported-esp32-c3-revision",
                         "name": "ESP32C3_REV_MIN",
                         "title": "Minimum Supported ESP32-C3 Revision",
@@ -2456,6 +2466,66 @@
                         "help": null,
                         "id": "ESP32C3_REV_MIN",
                         "name": "ESP32C3_REV_MIN",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "ESP32C3_REV_MIN_FULL",
+                        "name": "ESP32C3_REV_MIN_FULL",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "ESP_REV_MIN_FULL",
+                        "name": "ESP_REV_MIN_FULL",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "<choice ESP32C3_REV_MAX_FULL_STR>",
+                                "help": null,
+                                "id": "ESP32C3_REV_MAX_FULL_STR_OPT",
+                                "name": "ESP32C3_REV_MAX_FULL_STR_OPT",
+                                "range": null,
+                                "title": "Rev v0.99",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "component-config-esp32c3-specific-maximum-supported-esp32-c3-revision",
+                        "name": "ESP32C3_REV_MAX_FULL_STR",
+                        "title": "Maximum Supported ESP32-C3 Revision",
+                        "type": "choice"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "ESP32C3_REV_MAX_FULL",
+                        "name": "ESP32C3_REV_MAX_FULL",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "ESP_REV_MAX_FULL",
+                        "name": "ESP_REV_MAX_FULL",
                         "range": null,
                         "title": null,
                         "type": "int"
@@ -2801,6 +2871,16 @@
                                 "range": null,
                                 "title": null,
                                 "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "IDF_TARGET_ESP32",
+                                "help": "If you have an invalid MAC CRC (ESP_ERR_INVALID_CRC) problem\nand you still want to use this chip, you can enable this option to bypass such an error.\nThis applies to both MAC_FACTORY and CUSTOM_MAC efuses.",
+                                "id": "ESP_MAC_IGNORE_MAC_CRC_ERROR",
+                                "name": "ESP_MAC_IGNORE_MAC_CRC_ERROR",
+                                "range": null,
+                                "title": "Ignore MAC CRC error (not recommended)",
+                                "type": "bool"
                             }
                         ],
                         "depends_on": null,
@@ -2874,6 +2954,24 @@
                         "depends_on": null,
                         "id": "component-config-hardware-settings-sleep-config",
                         "title": "Sleep Config",
+                        "type": "menu"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "IDF_TARGET_ESP32C3",
+                                "help": "Its not able to stall ESP32C3 systimer in sleep.\nTo fix related RTOS TICK issue, select it to disable related systimer during sleep.\nTODO: IDF-7036",
+                                "id": "ESP_SLEEP_SYSTIMER_STALL_WORKAROUND",
+                                "name": "ESP_SLEEP_SYSTIMER_STALL_WORKAROUND",
+                                "range": null,
+                                "title": "ESP32C3 SYSTIMER Stall Issue Workaround",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-hardware-settings-esp_sleep_workaround",
+                        "title": "ESP_SLEEP_WORKAROUND",
                         "type": "menu"
                     },
                     {
