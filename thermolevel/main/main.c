@@ -14,7 +14,7 @@
 /*Sensor de nível*/
 #define TRIGGER_GPIO 0
 #define ECHO_GPIO 1
-#define DIST_MAX 5.32 //distância entre o sensor e o fundo do reservatório
+#define DIST_MAX 29 //distância entre o sensor e o fundo do reservatório
 #define DIST_MIN 2.30 //distância mínima entre o sensor e a superfície da água
 
 #define DS18B20_GPIO 12 //Sensor temperatura
@@ -23,10 +23,9 @@
 #define LED_G1_GPIO GPIO_NUM_9
 #define LED_G2_GPIO GPIO_NUM_8
 #define LED_Y1_GPIO GPIO_NUM_7
-#define LED_Y2_GPIO GPIO_NUM_6
 #define LED_R1_GPIO GPIO_NUM_10
 #define LED_R2_GPIO GPIO_NUM_3
-//#define BUZZER_GPIO GPIO_NUM_2
+#define BUZZER_GPIO GPIO_NUM_6
 
 /*Relé*/
 #define RELAY_1_GPIO GPIO_NUM_20 //controla bomba d'água
@@ -35,7 +34,8 @@
 /*Display LCD*/
 #define SDA_GPIO GPIO_NUM_4
 #define SCL_GPIO GPIO_NUM_5
-#define TEMP_DEFAULT 25
+#define TEMP_DEFAULT 25 //Por padrão a temperatura é definida em 25°C
+#define LEVEL_DEFAULT 80 //Por padrão o nível é definido em 80%
 
 /*Botões para definir a temperatura*/
 #define BUTTON_UP_GPIO GPIO_NUM_13
@@ -49,6 +49,7 @@ int count_level = 0;
 int count_temp = 0;
 
 int select_temp = TEMP_DEFAULT;
+int select_level = LEVEL_DEFAULT;
 bool edit_mode = false;
 TaskHandle_t edit_task_handle = NULL;
 TaskHandle_t temp_task_handle = NULL;
@@ -60,39 +61,37 @@ void leds_config()
     gpio_pad_select_gpio(LED_G1_GPIO);
     gpio_pad_select_gpio(LED_G2_GPIO);
     gpio_pad_select_gpio(LED_Y1_GPIO);
-    gpio_pad_select_gpio(LED_Y2_GPIO);
     gpio_pad_select_gpio(LED_R1_GPIO);
     gpio_pad_select_gpio(LED_R2_GPIO);
-    //gpio_pad_select_gpio(BUZZER_GPIO);
+    gpio_pad_select_gpio(BUZZER_GPIO);
     
     gpio_set_direction(LED_G1_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_direction(LED_G2_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_direction(LED_Y1_GPIO, GPIO_MODE_OUTPUT);
-    gpio_set_direction(LED_Y2_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_direction(LED_R1_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_direction(LED_R2_GPIO, GPIO_MODE_OUTPUT);
-    //gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);
+    gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);
 }
 
 void led_buzzer_blink(){
     /*Função que faz o buzzer e o led vermelho piscar 
     indicando algum erro*/
-    //gpio_set_level(BUZZER_GPIO, 1);
+    gpio_set_level(BUZZER_GPIO, 1);
     gpio_set_level(LED_R2_GPIO, 1);
     vTaskDelay(pdMS_TO_TICKS(500));
-    //gpio_set_level(BUZZER_GPIO, 0);
+    gpio_set_level(BUZZER_GPIO, 0);
     gpio_set_level(LED_R2_GPIO, 0);
 }
 
 void leds_update(float percentage){
     /*Atualiza os leds de acordo com a porcentagem medida pelo sensor*/
+
     gpio_set_level(LED_G1_GPIO, percentage >= 90 ? 1 : 0);
     gpio_set_level(LED_G2_GPIO, percentage >= 75 ? 1 : 0);
-    gpio_set_level(LED_Y1_GPIO, percentage >= 65 ? 1 : 0);
-    gpio_set_level(LED_Y2_GPIO, percentage >= 50 ? 1 : 0);
+    gpio_set_level(LED_Y1_GPIO, percentage >= 55 ? 1 : 0);
     gpio_set_level(LED_R1_GPIO, percentage >= 25 ? 1 : 0);
     gpio_set_level(LED_R2_GPIO, percentage >= 10 ? 1 : 0); 
-    vTaskDelay(pdMS_TO_TICKS(100));
+    
     if(percentage <= 10){
         led_buzzer_blink();
     }
@@ -123,7 +122,7 @@ void relay_config(){
 
 void read_buttons(){
     if (gpio_get_level(BUTTON_UP_GPIO) == 0 && gpio_get_level(BUTTON_DOWN_GPIO) == 0) {
-        //Os dois botões foram presisonados então o display entra em modo de edição
+        //Os dois botões foram presisonados então o display mostra o sistema em modo de edição
         edit_mode = !edit_mode;
     }
 }
@@ -225,6 +224,33 @@ void lcd_edit_temp(float temperature){
     char temp_str[10];
     sprintf(temp_str, "%.2f", temperature);
     lcd_send_string(temp_str);
+    lcd_send_data(223); //mandando o código do símbolo de grau (°)
+    lcd_send_data('C');
+}
+
+void lcd_edit_level(float level){
+    /*Mostrar a edição de nível através do display LCD
+    utilizando a biblioteca i2c-lcd*/
+    
+    lcd_put_cur(0, 0);
+    lcd_send_string("Modo edicao");
+
+    lcd_put_cur(1, 0);
+
+    char level_str[10];
+    sprintf(level_str, "%.2f %%", level);
+    lcd_send_string(level_str);
+}
+
+void lcd_menu(){
+    /*Mostrar o menu do modo de edição através do display LCD utilizando a biblioteca i2c-lcd,
+    assim o usuário pode selecionar qual parâmetro deseja alterar, nível ou temperatura*/
+    
+    lcd_put_cur(0, 0);
+    lcd_send_string("Modo edicao");
+
+    lcd_put_cur(1, 0);
+    lcd_send_string("<Nivel     Temp>");
 }
 
 float read_temperature(){
@@ -261,24 +287,37 @@ float read_temperature(){
     return temp;
 }
 
-void set_temperature(){
-    /*Função que lê os botões e modifica a temperatura definida aumentando ou diminuindo 1°C*/
+void set_parameter(bool type){
+    /*Função que lê os botões e modifica a temperatura ou nível definido*/
+    /*Se Type = 0 temperatura aumenta ou diminui 1°C
+    Se Type = 1 Nível aumenta ou diminui 5%*/
 
     int current_state_up = gpio_get_level(BUTTON_UP_GPIO);
     int current_state_down = gpio_get_level(BUTTON_DOWN_GPIO);
     if(current_state_up != 1){
         vTaskDelay(50 / portTICK_PERIOD_MS);
         if(current_state_up == gpio_get_level(BUTTON_UP_GPIO)){
-            if(current_state_up == 0 && select_temp < 50){
-                select_temp++;
+            if(current_state_up == 0){
+                if(type == 0 && select_temp < 50){
+                    select_temp++;
+                }
+                else if(type == 1 && select_level <= 95){
+                    select_level += 5;
+                }
             }
+            
         }
     }
     if(current_state_down != 1){
         vTaskDelay(50 / portTICK_PERIOD_MS);
         if(current_state_down == gpio_get_level(BUTTON_DOWN_GPIO)){
-            if(current_state_down == 0 && select_temp > 10){
-                select_temp--;
+            if(current_state_down == 0){
+                if(type == 0  && select_temp > 10){
+                    select_temp--;
+                }
+                else if(type == 1 && select_level >= 15){
+                    select_level -= 5;
+                }
             }
         }
     }
@@ -288,9 +327,31 @@ void edit_task(void *pvParameters){
     /*Tarefa referente a quando o sistema está em modo de edição, e o usuário pode escolher mudar a temperatura desejada*/
 
     while(1){
-        set_temperature();
-        lcd_edit_temp(select_temp);
+        lcd_menu();
 
+        vTaskDelay(50 / portTICK_PERIOD_MS);
+
+        if(gpio_get_level(BUTTON_UP_GPIO) == 0){
+            lcd_clear();
+            while(edit_mode){
+                //Enquanto o usuário não sair do modo de edição ele ficará alterando o parâmetro de temperatura
+                set_parameter(0);
+                lcd_edit_temp(select_temp);
+                count_temp = 0; //Reinicia a contagem de temperatura
+                vTaskDelay(100 / portTICK_PERIOD_MS);
+            }  
+        }
+        else if(gpio_get_level(BUTTON_DOWN_GPIO) == 0){
+            lcd_clear();
+            while(edit_mode){
+                //Enquanto o usuário não sair do modo de edição ele ficará alterando o parâmetro de nível
+                set_parameter(1);
+                lcd_edit_level(select_level);
+                count_level = 0; //Reinicia a contagem de nível
+                vTaskDelay(100 / portTICK_PERIOD_MS);
+            }
+        }
+        
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
@@ -308,11 +369,13 @@ void temperature_task(void *pvParameters){
         lcd_show_temp(current_temp);
 
         if(resist_active){
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
+            /*Se a resistência estiver ligada as leituras ocorrem a cada 1 segundo
+            para garantir maior precisão para desligar a resistência*/
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
 
         }
         else{
-            vTaskDelay(10000 / portTICK_PERIOD_MS);
+            vTaskDelay(5000 / portTICK_PERIOD_MS);
         }
         
         vTaskDelay(10 / portTICK_PERIOD_MS);
@@ -324,7 +387,7 @@ void read_level(){
 
     //Envia o sinal trigger
     gpio_set_level(TRIGGER_GPIO, 1);
-    ets_delay_us(20);
+    ets_delay_us(10);
     gpio_set_level(TRIGGER_GPIO, 0);
 
     //Espera pelo sinal echo
@@ -341,17 +404,17 @@ void read_level(){
     percentage = ((DIST_MAX - distance)/(DIST_MAX - DIST_MIN)) * 100; 
 
     if(percentage >= 0){ //Porcentagem válida
-        if(percentage <= 90){
+        if(percentage < select_level || percentage <= 10){
             count_level += 1;
             if(count_level == 5){ 
-                /*Se houverem 5 leituras do nível da caixa menor que 90
+                /*Se houverem 5 leituras do nível da caixa menor que o indicado pelo usuário
                 devemos ligar a bomba*/
                 turn_pump_on();
             }
         }
         else{
             if(pump_active){
-                /*Se a bomba estiver ligada mas a porcentagem é maior que 90
+                /*Se a bomba estiver ligada mas a porcentagem é maior que o indicado pelo usuário
                 devemos desligar a bomba*/
                 turn_pump_off();
             }
@@ -377,24 +440,26 @@ void level_task(void *pvParameters){
     for(;;){
 
         read_level();
+        
         if(pump_active){
             /*Se a bomba d'água estiver ligada as leituras ocorrem a cada 2 segundos
             para garantir maior precisão para desligar a bomba*/
             vTaskDelay(2000 / portTICK_PERIOD_MS);
         }
         else{
-            vTaskDelay(10000 / portTICK_PERIOD_MS);
+            vTaskDelay(5000 / portTICK_PERIOD_MS);
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 }
 
 void control_task(void *pvParameters){
-    /*Tarefa que cria e controla as tarefas sobre o modo de edição, onde o usuário modifica o parâmetro de temperatura,
+    /*Tarefa que cria e controla as tarefas sobre o modo de edição, onde o usuário modifica os parâmetros desejados,
     e o modo de execução, no qual o display exibe as informações sobre a temperatura atual da água*/
     
     xTaskCreate(&temperature_task, "temperature_task", 2048, NULL, 10, &temp_task_handle);
     xTaskCreate(&edit_task, "edit_task", 2048, NULL, 10, &edit_task_handle);
+    bool previous_state = false;
 
     while(1){
         if(edit_mode){
@@ -402,13 +467,17 @@ void control_task(void *pvParameters){
             vTaskResume(edit_task_handle);
         }
         else{
+            if(previous_state == true){
+                //assim que mudar entre o modo de edição e execução, limpa o display
+                lcd_clear();
+            }
             vTaskSuspend(edit_task_handle);
             vTaskResume(temp_task_handle);
         }
+        previous_state = edit_mode;
+
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
-
-    
 }
 
 void app_main(void)
