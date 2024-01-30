@@ -10,8 +10,8 @@
 
 # Application Requirements
 
-• Medir a temperatura da água <br>
-• Medir o nível do reservatório <br>
-• Controlar uma resistência (SSR/Relé) <br>
-• Controlar uma bomba de água (SSR/Relé) <br>
-• IHM para informar e controlar a temperatura da água, o nível em tempo real da água no reservatório.
+• Measure water temperature
+• Measure reservoir level
+• Control a resistance (SSR/Relay)
+• Control a water pump (SSR/Relay)
+• Human-Machine Interface (HMI) to provide information and control water temperature, as well as real-time water level in the reservoir.
