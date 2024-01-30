@@ -10,8 +10,8 @@
 
 # Application Requirements
 
-• Measure water temperature
-• Measure reservoir level
-• Control a resistance (SSR/Relay)
-• Control a water pump (SSR/Relay)
-• Human-Machine Interface (HMI) to provide information and control water temperature, as well as real-time water level in the reservoir.
+• Measure water temperature <br>
+• Measure reservoir level <br>
+• Control a resistance (SSR/Relay) <br>
+• Control a water pump (SSR/Relay) <br>
+• Human-Machine Interface (HMI) to provide information and control water temperature, as well as real-time water level in the reservoir. <br>
